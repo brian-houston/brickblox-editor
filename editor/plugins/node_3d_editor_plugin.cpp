@@ -1291,7 +1291,7 @@ bool Node3DEditorViewport::_transform_gizmo_select(const Vector2 &p_screenpos, b
 
 	Transform3D gt = spatial_editor->get_gizmo_transform();
 
-	if (spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_SELECT || spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_MOVE) {
+	if (spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_MOVE) {
 		int col_axis = -1;
 		real_t col_d = 1e20;
 
@@ -1357,7 +1357,7 @@ bool Node3DEditorViewport::_transform_gizmo_select(const Vector2 &p_screenpos, b
 		}
 	}
 
-	if (spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_SELECT || spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_ROTATE) {
+	if (spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_ROTATE) {
 		int col_axis = -1;
 
 		Vector3 hit_position;
@@ -1943,7 +1943,7 @@ void Node3DEditorViewport::_sinput(const Ref<InputEvent> &p_event) {
 
 					bool node_selected = get_selected_count() > 0;
 
-					if (node_selected && ((spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_SELECT && b->is_command_or_control_pressed()) || spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_ROTATE)) {
+					if (spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_ROTATE) {
 						begin_transform(TRANSFORM_ROTATE, false);
 						break;
 					}
@@ -4113,11 +4113,11 @@ void Node3DEditorViewport::update_transform_gizmo_view() {
 		axis_angle.basis.scale(scale);
 		axis_angle.origin = xform.origin;
 		RenderingServer::get_singleton()->instance_set_transform(move_gizmo_instance[i], axis_angle);
-		RenderingServer::get_singleton()->instance_set_visible(move_gizmo_instance[i], show_gizmo && (spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_SELECT || spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_MOVE));
+		RenderingServer::get_singleton()->instance_set_visible(move_gizmo_instance[i], show_gizmo && (spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_MOVE));
 		RenderingServer::get_singleton()->instance_set_transform(move_plane_gizmo_instance[i], axis_angle);
-		RenderingServer::get_singleton()->instance_set_visible(move_plane_gizmo_instance[i], show_gizmo && (spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_SELECT || spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_MOVE));
+		RenderingServer::get_singleton()->instance_set_visible(move_plane_gizmo_instance[i], show_gizmo && (spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_MOVE));
 		RenderingServer::get_singleton()->instance_set_transform(rotate_gizmo_instance[i], axis_angle);
-		RenderingServer::get_singleton()->instance_set_visible(rotate_gizmo_instance[i], show_gizmo && (spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_SELECT || spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_ROTATE));
+		RenderingServer::get_singleton()->instance_set_visible(rotate_gizmo_instance[i], show_gizmo && (spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_ROTATE));
 		RenderingServer::get_singleton()->instance_set_transform(scale_gizmo_instance[i], axis_angle);
 		RenderingServer::get_singleton()->instance_set_visible(scale_gizmo_instance[i], show_gizmo && (spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_SCALE));
 		RenderingServer::get_singleton()->instance_set_transform(scale_plane_gizmo_instance[i], axis_angle);
@@ -4135,7 +4135,7 @@ void Node3DEditorViewport::update_transform_gizmo_view() {
 	xform.orthonormalize();
 	xform.basis.scale(scale);
 	RenderingServer::get_singleton()->instance_set_transform(rotate_gizmo_instance[3], xform);
-	RenderingServer::get_singleton()->instance_set_visible(rotate_gizmo_instance[3], spatial_editor->is_gizmo_visible() && !_edit.instant && transform_gizmo_visible && !collision_reposition && (spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_SELECT || spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_ROTATE));
+	RenderingServer::get_singleton()->instance_set_visible(rotate_gizmo_instance[3], spatial_editor->is_gizmo_visible() && !_edit.instant && transform_gizmo_visible && !collision_reposition && (spatial_editor->get_tool_mode() == Node3DEditor::TOOL_MODE_ROTATE));
 }
 
 void Node3DEditorViewport::set_state(const Dictionary &p_state) {
