@@ -1499,23 +1499,20 @@ void Node3DEditorViewport::_transform_gizmo_apply(Node3D *p_node, const Transfor
 Transform3D Node3DEditorViewport::_compute_transform(TransformMode p_mode, const Transform3D &p_original, const Transform3D &p_original_local, Vector3 p_motion, double p_extra, bool p_local, bool p_orthogonal) {
 	switch (p_mode) {
 		case TRANSFORM_SCALE: {
+			if (!p_local) {
+				return p_original;
+			}
+
 			if (_edit.snap || spatial_editor->is_snap_enabled()) {
 				p_motion.snapf(p_extra);
 			}
-			Transform3D s;
-			if (p_local) {
-				s.basis = p_original_local.basis.scaled_local(p_motion + Vector3(1, 1, 1));
-				s.origin = p_original_local.origin;
-			} else {
-				s.basis.scale(p_motion + Vector3(1, 1, 1));
-				Transform3D base = Transform3D(Basis(), _edit.center);
-				s = base * (s * (base.inverse() * p_original));
 
-				// Recalculate orthogonalized scale without moving origin.
-				if (p_orthogonal) {
-					s.basis = p_original.basis.scaled_orthogonal(p_motion + Vector3(1, 1, 1));
-				}
-			}
+			Transform3D s;
+			Vector3 target_scale = p_original_local.basis.get_scale() + p_motion;
+			s.basis = p_original_local.basis.orthonormalized();
+			s.origin = p_original_local.origin;
+			s.translate_local(p_motion/2);
+			s.basis.scale_local(target_scale);
 
 			return s;
 		}
@@ -5134,7 +5131,6 @@ void Node3DEditorViewport::update_transform(bool p_shift) {
 
 			switch (_edit.plane) {
 				case TRANSFORM_VIEW:
-					motion_mask = Vector3(0, 0, 0);
 					plane = Plane(_get_camera_normal(), _edit.center);
 					break;
 				case TRANSFORM_X_AXIS:
@@ -5199,8 +5195,6 @@ void Node3DEditorViewport::update_transform(bool p_shift) {
 				motion = Vector3(scale, scale, scale);
 			}
 
-			motion /= click.distance_to(_edit.center);
-
 			// Disable local transformation for TRANSFORM_VIEW
 			bool local_coords = (spatial_editor->are_local_coords_enabled() && _edit.plane != TRANSFORM_VIEW);
 
@@ -5215,7 +5209,7 @@ void Node3DEditorViewport::update_transform(bool p_shift) {
 					String::num(motion_snapped.y, snap_step_decimals) + ", " + String::num(motion_snapped.z, snap_step_decimals) + ")");
 			if (local_coords) {
 				// TODO: needed?
-				motion = _edit.original.basis.inverse().xform(motion);
+				motion = _edit.original.basis.orthonormalized().inverse().xform(motion);
 			}
 
 			apply_transform(motion, snap);
