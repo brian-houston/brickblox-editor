@@ -382,6 +382,7 @@ private:
 		Variant gizmo_initial_value;
 		bool original_local;
 		bool instant;
+		bool reverse = false; // for scale tool
 
 		// Numeric blender-style transforms (e.g. 'g5x').
 		// numeric_input tracks the current input value, e.g. 1.23.
@@ -447,7 +448,7 @@ private:
 	real_t zoom_indicator_delay;
 	int zoom_failed_attempts_count = 0;
 
-	RID move_gizmo_instance[3], move_plane_gizmo_instance[3], rotate_gizmo_instance[4], scale_gizmo_instance[3], scale_plane_gizmo_instance[3], axis_gizmo_instance[3];
+	RID move_gizmo_instance[3], move_plane_gizmo_instance[3], rotate_gizmo_instance[4], scale_gizmo_instance[3], scale_gizmo_reverse_instance[3], scale_plane_gizmo_instance[3], axis_gizmo_instance[3];
 
 	String last_message;
 	String message;
