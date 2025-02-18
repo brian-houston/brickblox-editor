@@ -1476,8 +1476,7 @@ bool Node3DEditorViewport::_transform_gizmo_select(const Vector2 &p_screenpos, b
 
 		if (col_axis != -1) {
 			if (p_highlight_only) {
-				spatial_editor->select_gizmo_highlight_axis(col_axis + (is_plane_scale ? 12 : 9));
-
+				spatial_editor->select_gizmo_highlight_axis(col_axis + (is_plane_scale ? 12 : 9), _edit.reverse);
 			} else {
 				//handle scale
 				_edit.mode = TRANSFORM_SCALE;
@@ -3943,7 +3942,7 @@ void Node3DEditorViewport::_init_gizmo_instance(int p_idx) {
 		RS::get_singleton()->instance_geometry_set_flag(scale_gizmo_instance[i], RS::INSTANCE_FLAG_USE_BAKED_LIGHT, false);
 
 		scale_gizmo_reverse_instance[i] = RS::get_singleton()->instance_create();
-		RS::get_singleton()->instance_set_base(scale_gizmo_reverse_instance[i], spatial_editor->get_scale_gizmo(i)->get_rid());
+		RS::get_singleton()->instance_set_base(scale_gizmo_reverse_instance[i], spatial_editor->get_scale_gizmo_reverse(i)->get_rid());
 		RS::get_singleton()->instance_set_scenario(scale_gizmo_reverse_instance[i], get_tree()->get_root()->get_world_3d()->get_scenario());
 		RS::get_singleton()->instance_set_visible(scale_gizmo_reverse_instance[i], false);
 		RS::get_singleton()->instance_geometry_set_cast_shadows_setting(scale_gizmo_reverse_instance[i], RS::SHADOW_CASTING_SETTING_OFF);
@@ -6239,12 +6238,13 @@ Node3DEditorSelectedItem::~Node3DEditorSelectedItem() {
 	}
 }
 
-void Node3DEditor::select_gizmo_highlight_axis(int p_axis) {
+void Node3DEditor::select_gizmo_highlight_axis(int p_axis, bool p_reverse) {
 	for (int i = 0; i < 3; i++) {
 		move_gizmo[i]->surface_set_material(0, i == p_axis ? gizmo_color_hl[i] : gizmo_color[i]);
 		move_plane_gizmo[i]->surface_set_material(0, (i + 6) == p_axis ? plane_gizmo_color_hl[i] : plane_gizmo_color[i]);
 		rotate_gizmo[i]->surface_set_material(0, (i + 3) == p_axis ? rotate_gizmo_color_hl[i] : rotate_gizmo_color[i]);
-		scale_gizmo[i]->surface_set_material(0, (i + 9) == p_axis ? gizmo_color_hl[i] : gizmo_color[i]);
+		scale_gizmo[i]->surface_set_material(0, (i + 9) == p_axis && !p_reverse ? gizmo_color_hl[i] : gizmo_color[i]);
+		scale_gizmo_reverse[i]->surface_set_material(0, (i + 9) == p_axis && p_reverse ? gizmo_color_hl[i] : gizmo_color[i]);
 		scale_plane_gizmo[i]->surface_set_material(0, (i + 12) == p_axis ? plane_gizmo_color_hl[i] : plane_gizmo_color[i]);
 	}
 }
@@ -7509,6 +7509,7 @@ void fragment() {
 
 				surftool->set_material(mat);
 				surftool->commit(scale_gizmo[i]);
+				scale_gizmo_reverse[i] = scale_gizmo[i]->duplicate();
 			}
 
 			// Plane Scale

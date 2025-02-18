@@ -677,7 +677,7 @@ private:
 	Camera3D::ProjectionType grid_camera_last_update_perspective = Camera3D::PROJECTION_PERSPECTIVE;
 	Vector3 grid_camera_last_update_position;
 
-	Ref<ArrayMesh> move_gizmo[3], move_plane_gizmo[3], rotate_gizmo[4], scale_gizmo[3], scale_plane_gizmo[3], axis_gizmo[3];
+	Ref<ArrayMesh> move_gizmo[3], move_plane_gizmo[3], rotate_gizmo[4], scale_gizmo[3], scale_gizmo_reverse[3], scale_plane_gizmo[3], axis_gizmo[3];
 	Ref<StandardMaterial3D> gizmo_color[3];
 	Ref<StandardMaterial3D> plane_gizmo_color[3];
 	Ref<ShaderMaterial> rotate_gizmo_color[3];
@@ -928,13 +928,14 @@ public:
 	Ref<ArrayMesh> get_move_plane_gizmo(int idx) const { return move_plane_gizmo[idx]; }
 	Ref<ArrayMesh> get_rotate_gizmo(int idx) const { return rotate_gizmo[idx]; }
 	Ref<ArrayMesh> get_scale_gizmo(int idx) const { return scale_gizmo[idx]; }
+	Ref<ArrayMesh> get_scale_gizmo_reverse(int idx) const { return scale_gizmo_reverse[idx]; }
 	Ref<ArrayMesh> get_scale_plane_gizmo(int idx) const { return scale_plane_gizmo[idx]; }
 
 	void update_grid();
 	void update_transform_gizmo();
 	void update_all_gizmos(Node *p_node = nullptr);
 	void snap_selected_nodes_to_floor();
-	void select_gizmo_highlight_axis(int p_axis);
+	void select_gizmo_highlight_axis(int p_axis, bool p_reverse = false);
 	void set_custom_camera(Node *p_camera) { custom_camera = p_camera; }
 
 	Dictionary get_state() const;
