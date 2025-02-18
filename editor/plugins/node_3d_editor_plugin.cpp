@@ -5231,10 +5231,10 @@ void Node3DEditorViewport::update_transform(bool p_shift) {
 			// Disable local transformation for TRANSFORM_VIEW
 			bool local_coords = (spatial_editor->are_local_coords_enabled() && _edit.plane != TRANSFORM_VIEW);
 
-			snap = 1.0;
-			if (p_shift) {
-				snap = 0.2;
+			if (_edit.snap || spatial_editor->is_snap_enabled()) {
+				snap = spatial_editor->get_scale_snap();
 			}
+
 			Vector3 motion_snapped = motion;
 			motion_snapped.snapf(snap);
 			// This might not be necessary anymore after issue #288 is solved (in 4.0?).
@@ -5307,6 +5307,7 @@ void Node3DEditorViewport::update_transform(bool p_shift) {
 			if (_edit.snap || spatial_editor->is_snap_enabled()) {
 				snap = spatial_editor->get_translate_snap();
 			}
+
 			Vector3 motion_snapped = motion;
 			motion_snapped.snapf(snap);
 			// TRANSLATORS: Refers to changing the position of a node in the 3D editor.
@@ -9138,7 +9139,7 @@ Node3DEditor::Node3DEditor() {
 
 	snap_scale = memnew(LineEdit);
 	snap_scale->set_select_all_on_focus(true);
-	snap_dialog_vbc->add_margin_child(TTR("Scale Snap (%):"), snap_scale);
+	snap_dialog_vbc->add_margin_child(TTR("Scale Snap:"), snap_scale);
 
 	/* SETTINGS DIALOG */
 
@@ -9555,7 +9556,7 @@ real_t Node3DEditor::get_rotate_snap() const {
 real_t Node3DEditor::get_scale_snap() const {
 	real_t snap_value = snap_scale_value;
 	if (Input::get_singleton()->is_key_pressed(Key::SHIFT)) {
-		snap_value /= 2.0f;
+		snap_value /= 5.0f;
 	}
 	return snap_value;
 }
