@@ -1522,7 +1522,7 @@ Transform3D Node3DEditorViewport::_compute_transform(TransformMode p_mode, const
 
 			Vector3 current_scale = p_original_local.basis.get_scale();
 			Vector3 target_scale = current_scale + p_motion * (_edit.reverse ? -1 : 1);
-			target_scale = target_scale.maxf(0.1);
+			target_scale = target_scale.maxf(0.2);
 			p_motion = (target_scale - current_scale) * (_edit.reverse ? -1 : 1);;
 			s.basis = p_original_local.basis.orthonormalized();
 			s.origin = p_original_local.origin;
@@ -5227,8 +5227,9 @@ void Node3DEditorViewport::update_transform(bool p_shift) {
 			// Disable local transformation for TRANSFORM_VIEW
 			bool local_coords = (spatial_editor->are_local_coords_enabled() && _edit.plane != TRANSFORM_VIEW);
 
-			if (_edit.snap || spatial_editor->is_snap_enabled()) {
-				snap = spatial_editor->get_scale_snap() / 100;
+			snap = 1.0;
+			if (p_shift) {
+				snap = 0.2;
 			}
 			Vector3 motion_snapped = motion;
 			motion_snapped.snapf(snap);
