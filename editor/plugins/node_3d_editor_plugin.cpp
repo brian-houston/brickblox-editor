@@ -1536,7 +1536,12 @@ Transform3D Node3DEditorViewport::_compute_transform(TransformMode p_mode, const
 			}
 
 			if (p_local) {
-				return p_original_local.translated_local(p_motion);
+				Transform3D s;
+				s.basis = p_original_local.basis.orthonormalized();
+				s.origin = p_original_local.origin;
+				s.translate_local(p_motion);
+				s.basis.scale_local(p_original_local.basis.get_scale());
+				return s;
 			}
 
 			return p_original.translated(p_motion);
@@ -5308,7 +5313,7 @@ void Node3DEditorViewport::update_transform(bool p_shift) {
 			set_message(TTR("Translating:") + " (" + String::num(motion_snapped.x, snap_step_decimals) + ", " +
 					String::num(motion_snapped.y, snap_step_decimals) + ", " + String::num(motion_snapped.z, snap_step_decimals) + ")");
 			if (local_coords) {
-				motion = spatial_editor->get_gizmo_transform().basis.inverse().xform(motion);
+				motion = _edit.original.basis.orthonormalized().inverse().xform(motion);
 			}
 
 			apply_transform(motion, snap);
