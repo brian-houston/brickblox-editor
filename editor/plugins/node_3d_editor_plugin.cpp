@@ -5196,16 +5196,18 @@ void Node3DEditorViewport::update_transform(bool p_shift) {
 				snap = spatial_editor->get_scale_snap();
 			}
 
+			if (local_coords) {
+				// TODO: needed?
+				motion = _edit.original.basis.orthonormalized().inverse().xform(motion);
+			}
+
 			Vector3 motion_snapped = motion;
 			motion_snapped.snapf(snap);
 			// This might not be necessary anymore after issue #288 is solved (in 4.0?).
 			// TRANSLATORS: Refers to changing the scale of a node in the 3D editor.
 			set_message(TTR("Scaling:") + " (" + String::num(motion_snapped.x, snap_step_decimals) + ", " +
-					String::num(motion_snapped.y, snap_step_decimals) + ", " + String::num(motion_snapped.z, snap_step_decimals) + ")");
-			if (local_coords) {
-				// TODO: needed?
-				motion = _edit.original.basis.orthonormalized().inverse().xform(motion);
-			}
+			String::num(motion_snapped.y, snap_step_decimals) + ", " + String::num(motion_snapped.z, snap_step_decimals) + ")");
+
 
 			apply_transform(motion, snap);
 		} break;
@@ -5269,14 +5271,15 @@ void Node3DEditorViewport::update_transform(bool p_shift) {
 				snap = spatial_editor->get_translate_snap();
 			}
 
+			if (local_coords) {
+				motion = _edit.original.basis.orthonormalized().inverse().xform(motion);
+			}
+
 			Vector3 motion_snapped = motion;
 			motion_snapped.snapf(snap);
 			// TRANSLATORS: Refers to changing the position of a node in the 3D editor.
 			set_message(TTR("Translating:") + " (" + String::num(motion_snapped.x, snap_step_decimals) + ", " +
-					String::num(motion_snapped.y, snap_step_decimals) + ", " + String::num(motion_snapped.z, snap_step_decimals) + ")");
-			if (local_coords) {
-				motion = _edit.original.basis.orthonormalized().inverse().xform(motion);
-			}
+			String::num(motion_snapped.y, snap_step_decimals) + ", " + String::num(motion_snapped.z, snap_step_decimals) + ")");
 
 			apply_transform(motion, snap);
 		} break;
