@@ -123,11 +123,10 @@ void ColorPicker::_notification(int p_what) {
 			shape_popup->set_item_icon(shape_popup->get_item_index(SHAPE_HSV_WHEEL), theme_cache.shape_rect_wheel);
 			shape_popup->set_item_icon(shape_popup->get_item_index(SHAPE_VHS_CIRCLE), theme_cache.shape_circle);
 			shape_popup->set_item_icon(shape_popup->get_item_index(SHAPE_OKHSL_CIRCLE), theme_cache.shape_circle);
+			shape_popup->set_item_icon(shape_popup->get_item_index(SHAPE_NONE), theme_cache.shape_circle);
 
-			if (current_shape != SHAPE_NONE) {
-				btn_shape->set_button_icon(shape_popup->get_item_icon(current_shape));
-			}
-
+		
+			btn_shape->set_button_icon(shape_popup->get_item_icon(current_shape));
 			internal_margin->begin_bulk_theme_override();
 			internal_margin->add_theme_constant_override(SNAME("margin_bottom"), theme_cache.content_margin);
 			internal_margin->add_theme_constant_override(SNAME("margin_left"), theme_cache.content_margin);
@@ -343,7 +342,6 @@ void ColorPicker::_update_controls() {
 			wheel_edit->hide();
 			w_edit->hide();
 			uv_edit->hide();
-			btn_shape->hide();
 			break;
 		default: {
 		}
@@ -797,13 +795,10 @@ void ColorPicker::set_picker_shape(PickerShapeType p_shape) {
 	if (p_shape == current_shape) {
 		return;
 	}
-	if (current_shape != SHAPE_NONE) {
-		shape_popup->set_item_checked(current_shape, false);
-	}
-	if (p_shape != SHAPE_NONE) {
-		shape_popup->set_item_checked(p_shape, true);
-		btn_shape->set_button_icon(shape_popup->get_item_icon(p_shape));
-	}
+	
+	shape_popup->set_item_checked(current_shape, false);
+	shape_popup->set_item_checked(p_shape, true);
+	btn_shape->set_button_icon(shape_popup->get_item_icon(p_shape));
 
 	current_shape = p_shape;
 
@@ -2212,6 +2207,7 @@ ColorPicker::ColorPicker() {
 	shape_popup->add_radio_check_item("HSV Wheel", SHAPE_HSV_WHEEL);
 	shape_popup->add_radio_check_item("VHS Circle", SHAPE_VHS_CIRCLE);
 	shape_popup->add_radio_check_item("OKHSL Circle", SHAPE_OKHSL_CIRCLE);
+	shape_popup->add_radio_check_item("None", SHAPE_NONE);
 	shape_popup->set_item_checked(current_shape, true);
 	shape_popup->connect(SceneStringName(id_pressed), callable_mp(this, &ColorPicker::set_picker_shape));
 
