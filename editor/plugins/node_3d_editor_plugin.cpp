@@ -47,6 +47,7 @@
 #include "editor/plugins/animation_player_editor_plugin.h"
 #include "editor/plugins/gizmos/audio_listener_3d_gizmo_plugin.h"
 #include "editor/plugins/gizmos/audio_stream_player_3d_gizmo_plugin.h"
+#include "editor/plugins/gizmos/brick_gizmo_plugin.h"
 #include "editor/plugins/gizmos/camera_3d_gizmo_plugin.h"
 #include "editor/plugins/gizmos/collision_object_3d_gizmo_plugin.h"
 #include "editor/plugins/gizmos/collision_polygon_3d_gizmo_plugin.h"
@@ -100,6 +101,7 @@
 #include "scene/resources/3d/sky_material.h"
 #include "scene/resources/packed_scene.h"
 #include "scene/resources/surface_tool.h"
+#include "modules/brick/brick.h"
 
 constexpr real_t DISTANCE_DEFAULT = 4;
 
@@ -4484,7 +4486,10 @@ AABB Node3DEditorViewport::_calculate_spatial_bounds(const Node3D *p_parent, boo
 	const Transform3D xform_to_top_level_parent_space = bounds_orientation.affine_inverse() * p_parent->get_global_transform();
 
 	const VisualInstance3D *visual_instance = Object::cast_to<VisualInstance3D>(p_parent);
-	if (visual_instance) {
+	const Brick *brick_instance = Object::cast_to<Brick>(p_parent);
+	if (brick_instance) {
+		bounds = AABB(Vector3(-0.5, -0.5, -0.5), Vector3(1.0, 1.0, 1.0));
+	} else if (visual_instance) {
 		bounds = visual_instance->get_aabb();
 	} else {
 		bounds = AABB();
@@ -8557,6 +8562,7 @@ void Node3DEditor::_node_removed(Node *p_node) {
 }
 
 void Node3DEditor::_register_all_gizmos() {
+	add_gizmo_plugin(Ref<BrickGizmoPlugin>(memnew(BrickGizmoPlugin)));
 	add_gizmo_plugin(Ref<Camera3DGizmoPlugin>(memnew(Camera3DGizmoPlugin)));
 	add_gizmo_plugin(Ref<Light3DGizmoPlugin>(memnew(Light3DGizmoPlugin)));
 	add_gizmo_plugin(Ref<AudioStreamPlayer3DGizmoPlugin>(memnew(AudioStreamPlayer3DGizmoPlugin)));
