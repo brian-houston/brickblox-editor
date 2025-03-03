@@ -21,6 +21,7 @@ void BrickVisualController::set_brick_transform(BrickVisualData bvd, Transform3D
 }
 
 BrickVisualController::BrickVisualController() {
+    set_name("BrickVisualController");
     if (singleton == nullptr) {
         singleton = this;
 
