@@ -18,6 +18,7 @@ void BrickVisualizer::setup(int p_max_instances) {
     multimesh->set_mesh(box);
     multimesh->set_visible_instance_count(0);
     multimesh->set_instance_count(max_instances);
+    multimesh->set_custom_aabb(AABB(Vector3(-100000.0, -100000.0, -100000.0), Vector3(200000.0, 200000.0, 200000.0)));
 
     set_multimesh(multimesh);
 }
