@@ -14,4 +14,5 @@ void uninitialize_brick_module(ModuleInitializationLevel p_level) {
 	if (p_level != MODULE_INITIALIZATION_LEVEL_SCENE) {
 		return;
 	}
+	memdelete(Brick::box_shape);
 }
