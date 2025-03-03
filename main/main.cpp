@@ -136,7 +136,7 @@
 #endif // TOOLS_ENABLED && !GDSCRIPT_NO_LSP
 #endif // MODULE_GDSCRIPT_ENABLED
 
-#include "modules/brick_controller/brick_controller.h"
+#include "modules/brick_visual_controller/brick_visual_controller.h"
 
 /* Static members */
 
@@ -3978,7 +3978,8 @@ int Main::start() {
 		ResourceLoader::add_custom_loaders();
 		ResourceSaver::add_custom_savers();
 
-		sml->get_root()->add_child(BrickController::get_singleton());
+		BrickVisualController* bvc = memnew(BrickVisualController);
+		sml->get_root()->add_child(bvc);
 		
 		if (!project_manager && !editor) { // game
 			if (!game_path.is_empty() || !script.is_empty()) {
