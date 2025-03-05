@@ -5,17 +5,16 @@ BoxShape3D* Brick::box_shape = nullptr;
 void Brick::_notification(int p_what) {
     switch (p_what) {
         case NOTIFICATION_ENTER_TREE: {
-            bvd = BrickVisualController::get_singleton()->add_brick(get_global_transform());
-            if (bvd.visualizer_id == -1) {
+            brick_meta = BrickVisualController::get_singleton()->add_brick(get_global_transform(), bvd);
+            if (brick_meta.visualizer_slot == -1) {
                 queue_free();
             }
         } break;
         case NOTIFICATION_EXIT_TREE: {
-            BrickVisualController::get_singleton()->remove_brick(bvd);
-            bvd.visualizer_id = -1;
+            brick_meta = BrickVisualController::get_singleton()->remove_brick(brick_meta);
         } break;
         case NOTIFICATION_TRANSFORM_CHANGED: {
-            BrickVisualController::get_singleton()->set_brick_transform(bvd, get_global_transform());
+            brick_meta = BrickVisualController::get_singleton()->set_brick_transform(brick_meta, get_global_transform());
         } break;
         case NOTIFICATION_ENTER_WORLD: {
             PhysicsServer3D::get_singleton()->body_set_state(physics_id, PhysicsServer3D::BODY_STATE_TRANSFORM, get_global_transform());
@@ -43,6 +42,7 @@ Color Brick::get_color() const {
 
 void Brick::set_color(Color p_color) {
     bvd.color = (p_color.to_rgba32() & (~0xff)) | (bvd.color & 0xff);
+    brick_meta = BrickVisualController::get_singleton()->set_brick_custom_data(brick_meta, bvd);
 }
 
 float Brick::get_alpha() const {

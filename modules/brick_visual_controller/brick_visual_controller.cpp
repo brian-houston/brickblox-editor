@@ -1,23 +1,38 @@
 #include "brick_visual_controller.h"
+#include "brick_shaders.h"
 
 BrickVisualController* BrickVisualController::singleton = nullptr;
 
-BrickVisualData BrickVisualController::add_brick(Transform3D p_transform) {
-    BrickVisualData bvd;
-    bvd.visualizer_id = visualizer->add_instance(p_transform);
-    return bvd;
+BrickVisualMetadata BrickVisualController::add_brick(const Transform3D& p_transform, const BrickVisualData p_bvd) {
+    BrickVisualMetadata meta;
+    meta.visualizer_slot = visualizer->add_instance(p_transform);
+    return meta;
 }
 
-void BrickVisualController::remove_brick(BrickVisualData bvd) {
-    if (bvd.visualizer_id > -1) {
-        visualizer->remove_instance(bvd.visualizer_id);
+BrickVisualMetadata BrickVisualController::remove_brick(BrickVisualMetadata p_meta) {
+    if (p_meta.visualizer_slot > -1) {
+        visualizer->remove_instance(p_meta.visualizer_slot);
+        p_meta.visualizer_slot = -1;
     }
+
+    return p_meta;
 }
 
-void BrickVisualController::set_brick_transform(BrickVisualData bvd, Transform3D p_transform) {
-    if (bvd.visualizer_id > -1) {
-        visualizer->set_instance_transform(bvd.visualizer_id, p_transform);
+BrickVisualMetadata BrickVisualController::set_brick_transform(BrickVisualMetadata p_meta, const Transform3D& p_transform) {
+    if (p_meta.visualizer_slot > -1) {
+        visualizer->set_instance_transform(p_meta.visualizer_slot, p_transform);
     }
+
+    return p_meta;
+}
+
+BrickVisualMetadata BrickVisualController::set_brick_custom_data(BrickVisualMetadata p_meta, BrickVisualData p_bvd) {
+    if (p_meta.visualizer_slot > -1) {
+        const Color custom_data = *reinterpret_cast<Color*>(&p_bvd);
+        visualizer->set_instance_custom_data(p_meta.visualizer_slot, custom_data);
+    }
+
+    return p_meta;
 }
 
 BrickVisualController::BrickVisualController() {
@@ -27,6 +42,7 @@ BrickVisualController::BrickVisualController() {
 
         visualizer = memnew(BrickVisualizer);
         visualizer->setup(65536);
+        visualizer->set_shader_code(get_brick_shader_code());
         add_child(visualizer);
     }
 }
