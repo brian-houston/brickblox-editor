@@ -3,9 +3,10 @@
 
 BrickVisualController* BrickVisualController::singleton = nullptr;
 
-BrickVisualMetadata BrickVisualController::add_brick(const Transform3D& p_transform, const BrickVisualData p_bvd) {
+BrickVisualMetadata BrickVisualController::add_brick(const Transform3D& p_transform, BrickVisualData p_bvd) {
     BrickVisualMetadata meta;
-    meta.visualizer_slot = visualizer->add_instance(p_transform);
+    const Color custom_data = *reinterpret_cast<Color*>(&p_bvd);
+    meta.visualizer_slot = visualizer->add_instance(p_transform, custom_data);
     return meta;
 }
 

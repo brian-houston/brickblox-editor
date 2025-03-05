@@ -44,7 +44,7 @@ void BrickVisualizer::set_shader_code(const String& shader_code) {
 }
 
 
-int BrickVisualizer::add_instance(const Transform3D& p_transform) {
+int BrickVisualizer::add_instance(const Transform3D& p_transform, Color p_color) {
     int slot = -1;
     Ref<MultiMesh> multimesh = get_multimesh();
 
@@ -58,6 +58,7 @@ int BrickVisualizer::add_instance(const Transform3D& p_transform) {
 
     if (slot > -1) {
         multimesh->set_instance_transform(slot, p_transform);
+        multimesh->set_instance_custom_data(slot, p_color);
     }
 
     return slot;
