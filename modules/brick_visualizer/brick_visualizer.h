@@ -10,7 +10,7 @@ public:
     BrickVisualizer();
     void setup(int p_max_instances);
     void set_shader_code(const String& shader_code);
-    int add_instance(const Transform3D& p_transform);
+    int add_instance(const Transform3D& p_transform, Color p_color);
     void remove_instance(int p_slot);
     void set_instance_transform(int p_slot, const Transform3D& p_transform);
     void set_instance_custom_data(int p_slot, Color p_color);

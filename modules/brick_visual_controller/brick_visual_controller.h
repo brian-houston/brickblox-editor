@@ -24,7 +24,7 @@ public:
         return singleton;
     }
     BrickVisualController();
-    BrickVisualMetadata add_brick(const Transform3D& p_transform, const BrickVisualData p_bvd);
+    BrickVisualMetadata add_brick(const Transform3D& p_transform, BrickVisualData p_bvd);
     BrickVisualMetadata remove_brick(BrickVisualMetadata p_meta);
     BrickVisualMetadata set_brick_transform(BrickVisualMetadata p_meta, const Transform3D& p_transform);
     BrickVisualMetadata set_brick_custom_data(BrickVisualMetadata p_meta, BrickVisualData p_bvd);
