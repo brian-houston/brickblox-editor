@@ -19,11 +19,13 @@ public:
 
     bool get_anchored() const;
     void set_anchored(bool p_anchored);
+    
     void _body_state_changed(PhysicsDirectBodyState3D *p_state);
     static void _bind_methods();
     static BoxShape3D* box_shape;
 private:
     BrickVisualData bvd;
+    BrickVisualMetadata brick_meta;
     RID physics_id;
     bool anchored;
 };

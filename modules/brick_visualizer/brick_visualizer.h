@@ -3,14 +3,17 @@
 
 #include "scene/3d/multimesh_instance_3d.h"
 
+
 class BrickVisualizer : public MultiMeshInstance3D {
     GDCLASS(BrickVisualizer, MultiMeshInstance3D);
 public:
     BrickVisualizer();
     void setup(int p_max_instances);
-    int add_instance(Transform3D p_transform);
-    void remove_instance(int p_id);
-    void set_instance_transform(int p_id, Transform3D p_transform);
+    void set_shader_code(const String& shader_code);
+    int add_instance(const Transform3D& p_transform);
+    void remove_instance(int p_slot);
+    void set_instance_transform(int p_slot, const Transform3D& p_transform);
+    void set_instance_custom_data(int p_slot, Color p_color);
 private:
     int max_instances;
     int current_instances;
