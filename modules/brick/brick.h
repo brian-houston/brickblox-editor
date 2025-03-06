@@ -27,6 +27,7 @@ private:
     BrickVisualData bvd;
     BrickVisualMetadata brick_meta;
     RID physics_id;
-    bool anchored;
+    bool anchored = true;
+    bool reset_position = false;
 };
 #endif
