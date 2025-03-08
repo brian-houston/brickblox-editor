@@ -23,11 +23,13 @@ public:
     static BrickVisualController* get_singleton() {
         return singleton;
     }
+    static void _bind_methods();
     BrickVisualController();
     BrickVisualMetadata add_brick(const Transform3D& p_transform, BrickVisualData p_bvd);
     BrickVisualMetadata remove_brick(BrickVisualMetadata p_meta);
     BrickVisualMetadata set_brick_transform(BrickVisualMetadata p_meta, const Transform3D& p_transform);
     BrickVisualMetadata set_brick_custom_data(BrickVisualMetadata p_meta, const Transform3D& p_transform, BrickVisualData p_bvd);
+    void set_visualizer_material(int32_t visualizer_type, Ref<Material> mat);
     int get_visualizer_type(BrickVisualData p_bvd);
 private:
     BrickVisualizer* visualizers[4];

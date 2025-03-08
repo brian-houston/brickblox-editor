@@ -27,22 +27,13 @@ void BrickVisualizer::setup(int p_max_instances) {
     set_multimesh(multimesh);
 }
 
-void BrickVisualizer::set_shader_code(const String& shader_code) {
-    if (!get_multimesh().is_valid()) {
+void BrickVisualizer::set_material(Ref<Material> mat) {
+    if (!get_multimesh().is_valid() || !mat.is_valid()) {
         return;
     }
 
-    Ref<Shader> shader;
-    shader.instantiate();
-    shader->set_code(shader_code);
-
-    Ref<ShaderMaterial> material;
-    material.instantiate();
-    material->set_shader(shader);
-
-    get_multimesh()->get_mesh()->surface_set_material(0, material);
+    get_multimesh()->get_mesh()->surface_set_material(0, mat);
 }
-
 
 int BrickVisualizer::add_instance(const Transform3D& p_transform, Color p_color) {
     int slot = -1;

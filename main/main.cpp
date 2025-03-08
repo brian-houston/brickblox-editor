@@ -4011,6 +4011,9 @@ int Main::start() {
 
 		BrickVisualController* bvc = memnew(BrickVisualController);
 		sml->get_root()->add_child(bvc);
+		for (int i = 0; i < ScriptServer::get_language_count(); i++) {
+			ScriptServer::get_language(i)->add_global_constant("BVC", bvc);
+		}
 		
 		if (!project_manager && !editor) { // game
 			if (!game_path.is_empty() || !script.is_empty()) {
